@@ -3,6 +3,7 @@ package br.com.thuler.store.service;
 import br.com.thuler.store.model.entities.User;
 import br.com.thuler.store.model.exceptions.NotFoundException;
 import br.com.thuler.store.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    @Autowired
     private UserRepository userRepository;
 
     public User create(User user){
