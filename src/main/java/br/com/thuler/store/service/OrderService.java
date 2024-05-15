@@ -26,7 +26,7 @@ public class OrderService {
         if(foundOrder.isPresent()){
             return foundOrder.get();
         }else{
-            throw new NotFoundException("order not found...");
+            throw new NotFoundException("Order not found...");
         }
 
     }
@@ -50,7 +50,7 @@ public class OrderService {
         if(foundOrder.isPresent()){
             return orderRepository.save(order);
         }else{
-            throw new NotFoundException("order not found...");
+            throw new NotFoundException("Order not found...");
         }
 
     }
@@ -62,7 +62,7 @@ public class OrderService {
         if(foundOrder.isPresent()){
             orderRepository.delete(foundOrder.get());
         }else{
-            throw new NotFoundException("order not found...");
+            throw new NotFoundException("Order not found...");
         }
 
     }
