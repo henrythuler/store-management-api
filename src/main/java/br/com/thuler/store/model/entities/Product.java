@@ -20,7 +20,7 @@ public class Product {
 
     @ManyToMany
     @JoinTable(name = "T_SPRING_PRODUCT_CATEGORY", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     public Product() {}
 
@@ -30,7 +30,6 @@ public class Product {
         this.description = description;
         this.price = price;
         this.imageURL = imageURL;
-        this.categories = new HashSet<>();
     }
 
     public Integer getId() {
