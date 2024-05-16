@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "T_SPRING_STORE_ORDER")
@@ -26,6 +28,10 @@ public class Order {
     @JoinColumn(name = "client_id")
     private User client;
 
+    //What is referencing this order is the OrderItemPK, that is the ID of the OrderItem, available com id.order
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items;
+
     public Order() {}
 
     public Order(Integer id, Instant moment, OrderStatus orderStatus, User client) {
@@ -33,6 +39,7 @@ public class Order {
         this.moment = moment;
         setOrderStatus(orderStatus);
         this.client = client;
+        this.items = new HashSet<>();
     }
 
     public Integer getId() {
@@ -69,6 +76,10 @@ public class Order {
         this.client = client;
     }
 
+    public Set<OrderItem> getItems() {
+        return items;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,4 +102,5 @@ public class Order {
                 ", client=" + client +
                 '}';
     }
+
 }
