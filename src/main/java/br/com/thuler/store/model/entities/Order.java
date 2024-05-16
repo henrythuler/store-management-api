@@ -32,6 +32,9 @@ public class Order {
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
+
     public Order() {}
 
     public Order(Integer id, Instant moment, OrderStatus orderStatus, User client) {
