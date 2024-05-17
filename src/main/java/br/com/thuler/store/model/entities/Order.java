@@ -83,6 +83,17 @@ public class Order {
         return items;
     }
 
+    public Double getTotal(){
+        Double sum = 0.0;
+
+        for(OrderItem oI : items){
+            sum += oI.getPrice();
+        }
+
+        return sum;
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
