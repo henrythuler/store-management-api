@@ -1,9 +1,12 @@
 package br.com.thuler.store.service;
 
+import br.com.thuler.store.exceptions.DatabaseException;
 import br.com.thuler.store.model.entities.Category;
 import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.repository.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,11 +44,12 @@ public class CategoryService {
 
     public Category update(Category category){
 
-        Optional<Category> foundCategory = categoryRepository.findById(category.getId());
+        try {
+            Category foundCategory = categoryRepository.getReferenceById(category.getId());
+            foundCategory.setName(category.getName());
 
-        if(foundCategory.isPresent()){
-            return categoryRepository.save(category);
-        }else{
+            return categoryRepository.save(foundCategory);
+        }catch (EntityNotFoundException e) {
             throw new NotFoundException("Category");
         }
 
@@ -53,9 +57,12 @@ public class CategoryService {
 
     public void delete(Integer id){
 
-        Optional<Category> foundCategory = categoryRepository.findById(id);
-
-        categoryRepository.delete(foundCategory.orElseThrow(() -> new NotFoundException("Category")));
+        try{
+            if(!categoryRepository.existsById(id)) throw new NotFoundException("Category");
+            categoryRepository.deleteById(id);
+        }catch(DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
 
     }
 

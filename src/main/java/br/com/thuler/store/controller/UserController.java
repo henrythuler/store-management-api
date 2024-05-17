@@ -1,7 +1,6 @@
 package br.com.thuler.store.controller;
 
 import br.com.thuler.store.model.entities.User;
-import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,40 +25,22 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Integer id){
-        try{
-            return ResponseEntity.ok().body(userService.findById(id));
-        }catch(NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
-    }
+    public ResponseEntity<User> findById(@PathVariable Integer id){ return ResponseEntity.ok().body(userService.findById(id)); }
 
     @GetMapping
     public ResponseEntity<List<User>> findAll(){
-        try{
-            return ResponseEntity.ok().body(userService.findAll());
-        }catch (NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(userService.findAll());
     }
 
     @PutMapping
     public ResponseEntity<User> update(@RequestBody User user){
-        try{
-            return ResponseEntity.ok().body(userService.update(user));
-        }catch(NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(userService.update(user));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Integer id){
-        try{
-            userService.delete(id);
-            return ResponseEntity.noContent().build();
-        }catch(NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable Integer id){
+        userService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

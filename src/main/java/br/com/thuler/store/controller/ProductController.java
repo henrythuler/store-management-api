@@ -2,7 +2,6 @@ package br.com.thuler.store.controller;
 
 import br.com.thuler.store.model.dto.ProductDTO;
 import br.com.thuler.store.model.entities.Product;
-import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.service.CategoryService;
 import br.com.thuler.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,39 +35,23 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> findById(@PathVariable Integer id){
-        try{
-            return ResponseEntity.ok().body(productService.findById(id));
-        }catch(NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(productService.findById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<Product>> findAll(){
-        try{
-            return ResponseEntity.ok().body(productService.findAll());
-        }catch (NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(productService.findAll());
     }
 
     @PutMapping
     public ResponseEntity<Product> update(@RequestBody Product product){
-        try{
-            return ResponseEntity.ok().body(productService.update(product));
-        }catch(NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(productService.update(product));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Integer id){
-        try{
-            productService.delete(id);
-            return ResponseEntity.noContent().build();
-        }catch(NotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable Integer id){
+        productService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

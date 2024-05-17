@@ -7,7 +7,6 @@ import br.com.thuler.store.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,12 +59,11 @@ public class UserService {
 
     }
 
-    public void delete(Integer id){
+    public void deleteById(Integer id){
 
         try{
+            if(!userRepository.existsById(id)) throw new NotFoundException("User");
             userRepository.deleteById(id);
-        }catch(EmptyResultDataAccessException e){
-            throw new NotFoundException("User");
         }catch(DataIntegrityViolationException e){
             throw new DatabaseException(e.getMessage());
         }

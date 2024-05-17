@@ -1,9 +1,12 @@
 package br.com.thuler.store.service;
 
+import br.com.thuler.store.exceptions.DatabaseException;
 import br.com.thuler.store.model.entities.Order;
 import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.repository.OrderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,21 +44,27 @@ public class OrderService {
 
     public Order update(Order order){
 
-        Optional<Order> foundOrder = orderRepository.findById(order.getId());
+        try{
 
-        if(foundOrder.isPresent()){
-            return orderRepository.save(order);
-        }else{
+            Order foundOrder = orderRepository.getReferenceById(order.getId());
+            foundOrder.setOrderStatus(order.getOrderStatus());
+
+            return orderRepository.save(foundOrder);
+
+        }catch(EntityNotFoundException e){
             throw new NotFoundException("Order");
         }
 
     }
 
-    public void delete(Integer id){
+    public void deleteById(Integer id){
 
-        Optional<Order> foundOrder = orderRepository.findById(id);
-
-        orderRepository.delete(foundOrder.orElseThrow(() -> new NotFoundException("Order")));
+        try{
+            if(!orderRepository.existsById(id)) throw new NotFoundException("Order");
+            orderRepository.deleteById(id);
+        }catch (DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
 
     }
 

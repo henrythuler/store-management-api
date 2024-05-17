@@ -1,9 +1,12 @@
 package br.com.thuler.store.service;
 
+import br.com.thuler.store.exceptions.DatabaseException;
 import br.com.thuler.store.model.entities.Product;
 import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,21 +44,29 @@ public class ProductService {
 
     public Product update(Product product){
 
-        Optional<Product> foundProduct = productRepository.findById(product.getId());
+        try{
+            Product foundProduct = productRepository.getReferenceById(product.getId());
 
-        if(foundProduct.isPresent()){
-            return productRepository.save(product);
-        }else{
+            foundProduct.setName(product.getName());
+            foundProduct.setDescription(product.getDescription());
+            foundProduct.setPrice(product.getPrice());
+            foundProduct.setImageURL(product.getImageURL());
+
+            return productRepository.save(foundProduct);
+        }catch(EntityNotFoundException e){
             throw new NotFoundException("Product");
         }
 
     }
 
-    public void delete(Integer id){
+    public void deleteById(Integer id){
 
-        Optional<Product> foundProduct = productRepository.findById(id);
-
-        productRepository.delete(foundProduct.orElseThrow(() -> new NotFoundException("Product")));
+        try{
+            if(!productRepository.existsById(id)) throw new NotFoundException("Product");
+            productRepository.deleteById(id);
+        }catch(DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
 
     }
 
