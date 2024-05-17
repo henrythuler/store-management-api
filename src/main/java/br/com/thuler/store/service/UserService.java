@@ -45,13 +45,14 @@ public class UserService {
 
     public User update(User user){
 
-        Optional<User> foundUser = userRepository.findById(user.getId());
+        User foundUser = userRepository.getReferenceById(user.getId());
 
-        if(foundUser.isPresent()){
-            return userRepository.save(user);
-        }else{
-            throw new NotFoundException("User not found...");
-        }
+        foundUser.setName(user.getName());
+        foundUser.setEmail(user.getEmail());
+        foundUser.setPhone(user.getPhone());
+        foundUser.setPassword(user.getPassword());
+
+        return userRepository.save(foundUser);
 
     }
 
