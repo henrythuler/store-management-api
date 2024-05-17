@@ -1,7 +1,7 @@
 package br.com.thuler.store.service;
 
 import br.com.thuler.store.model.entities.Order;
-import br.com.thuler.store.model.exceptions.NotFoundException;
+import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,7 @@ public class OrderService {
 
         Optional<Order> foundOrder = orderRepository.findById(id);
 
-        if(foundOrder.isPresent()){
-            return foundOrder.get();
-        }else{
-            throw new NotFoundException("Order not found...");
-        }
+        return foundOrder.orElseThrow(() -> new NotFoundException("Order"));
 
     }
 
@@ -38,7 +34,7 @@ public class OrderService {
         if(!orders.isEmpty()){
             return orders;
         }else{
-            throw new NotFoundException("There are no orders...");
+            throw new NotFoundException("Orders");
         }
 
     }
@@ -50,7 +46,7 @@ public class OrderService {
         if(foundOrder.isPresent()){
             return orderRepository.save(order);
         }else{
-            throw new NotFoundException("Order not found...");
+            throw new NotFoundException("Order");
         }
 
     }
@@ -59,11 +55,7 @@ public class OrderService {
 
         Optional<Order> foundOrder = orderRepository.findById(id);
 
-        if(foundOrder.isPresent()){
-            orderRepository.delete(foundOrder.get());
-        }else{
-            throw new NotFoundException("Order not found...");
-        }
+        orderRepository.delete(foundOrder.orElseThrow(() -> new NotFoundException("Order")));
 
     }
 

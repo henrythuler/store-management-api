@@ -1,6 +1,6 @@
 package br.com.thuler.store.model.enums;
 
-import br.com.thuler.store.model.exceptions.NotFoundException;
+import br.com.thuler.store.exceptions.NotFoundException;
 
 public enum OrderStatus {
     WAITING_PAYMENT(0),

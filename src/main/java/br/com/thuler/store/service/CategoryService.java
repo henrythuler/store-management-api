@@ -1,7 +1,7 @@
 package br.com.thuler.store.service;
 
 import br.com.thuler.store.model.entities.Category;
-import br.com.thuler.store.model.exceptions.NotFoundException;
+import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,7 @@ public class CategoryService {
 
         Optional<Category> foundCategory = categoryRepository.findById(id);
 
-        if(foundCategory.isPresent()){
-            return foundCategory.get();
-        }else{
-            throw new NotFoundException("category not found...");
-        }
+        return foundCategory.orElseThrow(() -> new NotFoundException("Category"));
 
     }
 
@@ -38,7 +34,7 @@ public class CategoryService {
         if(!categories.isEmpty()){
             return categories;
         }else{
-            throw new NotFoundException("There are no categories...");
+            throw new NotFoundException("Categories");
         }
 
     }
@@ -50,7 +46,7 @@ public class CategoryService {
         if(foundCategory.isPresent()){
             return categoryRepository.save(category);
         }else{
-            throw new NotFoundException("category not found...");
+            throw new NotFoundException("Category");
         }
 
     }
@@ -59,11 +55,7 @@ public class CategoryService {
 
         Optional<Category> foundCategory = categoryRepository.findById(id);
 
-        if(foundCategory.isPresent()){
-            categoryRepository.delete(foundCategory.get());
-        }else{
-            throw new NotFoundException("category not found...");
-        }
+        categoryRepository.delete(foundCategory.orElseThrow(() -> new NotFoundException("Category")));
 
     }
 

@@ -1,7 +1,7 @@
 package br.com.thuler.store.service;
 
 import br.com.thuler.store.model.entities.Product;
-import br.com.thuler.store.model.exceptions.NotFoundException;
+import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,7 @@ public class ProductService {
 
         Optional<Product> foundProduct = productRepository.findById(id);
 
-        if(foundProduct.isPresent()){
-            return foundProduct.get();
-        }else{
-            throw new NotFoundException("Product not found...");
-        }
+        return foundProduct.orElseThrow(() -> new NotFoundException("Product"));
 
     }
 
@@ -38,7 +34,7 @@ public class ProductService {
         if(!products.isEmpty()){
             return products;
         }else{
-            throw new NotFoundException("There are no products...");
+            throw new NotFoundException("Products");
         }
 
     }
@@ -50,7 +46,7 @@ public class ProductService {
         if(foundProduct.isPresent()){
             return productRepository.save(product);
         }else{
-            throw new NotFoundException("Product not found...");
+            throw new NotFoundException("Product");
         }
 
     }
@@ -59,11 +55,7 @@ public class ProductService {
 
         Optional<Product> foundProduct = productRepository.findById(id);
 
-        if(foundProduct.isPresent()){
-            productRepository.delete(foundProduct.get());
-        }else{
-            throw new NotFoundException("Product not found...");
-        }
+        productRepository.delete(foundProduct.orElseThrow(() -> new NotFoundException("Product")));
 
     }
 

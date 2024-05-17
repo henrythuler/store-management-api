@@ -2,7 +2,7 @@ package br.com.thuler.store.controller;
 
 import br.com.thuler.store.model.dto.ProductDTO;
 import br.com.thuler.store.model.entities.Product;
-import br.com.thuler.store.model.exceptions.NotFoundException;
+import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.service.CategoryService;
 import br.com.thuler.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

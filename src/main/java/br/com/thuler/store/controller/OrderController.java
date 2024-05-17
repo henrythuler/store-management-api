@@ -1,7 +1,7 @@
 package br.com.thuler.store.controller;
 
 import br.com.thuler.store.model.entities.Order;
-import br.com.thuler.store.model.exceptions.NotFoundException;
+import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

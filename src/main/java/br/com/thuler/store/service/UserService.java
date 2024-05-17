@@ -1,9 +1,13 @@
 package br.com.thuler.store.service;
 
+import br.com.thuler.store.exceptions.DatabaseException;
 import br.com.thuler.store.model.entities.User;
-import br.com.thuler.store.model.exceptions.NotFoundException;
+import br.com.thuler.store.exceptions.NotFoundException;
 import br.com.thuler.store.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +27,7 @@ public class UserService {
 
         Optional<User> foundUser = userRepository.findById(id);
 
-        if(foundUser.isPresent()){
-            return foundUser.get();
-        }else{
-            throw new NotFoundException("User not found...");
-        }
+        return foundUser.orElseThrow(() -> new NotFoundException("User"));
 
     }
 
@@ -38,32 +38,36 @@ public class UserService {
         if(!users.isEmpty()){
             return users;
         }else{
-            throw new NotFoundException("There are no users...");
+            throw new NotFoundException("Users");
         }
 
     }
 
     public User update(User user){
 
-        User foundUser = userRepository.getReferenceById(user.getId());
+        try{
+            User foundUser = userRepository.getReferenceById(user.getId());
 
-        foundUser.setName(user.getName());
-        foundUser.setEmail(user.getEmail());
-        foundUser.setPhone(user.getPhone());
-        foundUser.setPassword(user.getPassword());
+            foundUser.setName(user.getName());
+            foundUser.setEmail(user.getEmail());
+            foundUser.setPhone(user.getPhone());
+            foundUser.setPassword(user.getPassword());
 
-        return userRepository.save(foundUser);
+            return userRepository.save(foundUser);
+        }catch(EntityNotFoundException e){
+            throw new NotFoundException("User");
+        }
 
     }
 
     public void delete(Integer id){
 
-        Optional<User> foundUser = userRepository.findById(id);
-
-        if(foundUser.isPresent()){
-            userRepository.delete(foundUser.get());
-        }else{
-            throw new NotFoundException("User not found...");
+        try{
+            userRepository.deleteById(id);
+        }catch(EmptyResultDataAccessException e){
+            throw new NotFoundException("User");
+        }catch(DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
         }
 
     }
